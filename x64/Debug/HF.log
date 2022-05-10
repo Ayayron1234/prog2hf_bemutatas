@@ -1,0 +1,63 @@
+﻿  main.cpp
+D:\Projects\BME\Prog 2\HF\Shape.h(28,10): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+D:\Projects\BME\Prog 2\HF\Shape.h(29,10): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+D:\Projects\BME\Prog 2\HF\Shape.h(33,46): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Projects\BME\Prog 2\HF\Shape.h(33,38): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Projects\BME\Prog 2\HF\Shape.h(34,46): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Projects\BME\Prog 2\HF\Shape.h(34,38): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Projects\BME\Prog 2\HF\Shape.h(35,46): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Projects\BME\Prog 2\HF\Shape.h(35,38): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Projects\BME\Prog 2\HF\Shape.h(36,46): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Projects\BME\Prog 2\HF\Shape.h(36,38): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Projects\BME\Prog 2\HF\Shape.h(37,46): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Projects\BME\Prog 2\HF\Shape.h(37,38): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Projects\BME\Prog 2\HF\Shape.h(38,46): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Projects\BME\Prog 2\HF\Shape.h(38,38): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Projects\BME\Prog 2\HF\Shape.h(39,46): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Projects\BME\Prog 2\HF\Shape.h(39,38): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Projects\BME\Prog 2\HF\Shape.h(40,46): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Projects\BME\Prog 2\HF\Shape.h(40,38): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Projects\BME\Prog 2\HF\Shape.h(59,25): warning C4838: conversion from 'double' to 'int' requires a narrowing conversion
+D:\Projects\BME\Prog 2\HF\Shape.h(59,25): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+D:\Projects\BME\Prog 2\HF\Shape.h(59,34): warning C4838: conversion from 'double' to 'int' requires a narrowing conversion
+D:\Projects\BME\Prog 2\HF\Shape.h(59,34): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+D:\Projects\BME\Prog 2\HF\Shape.h(237,1): warning C4250: 'Square': inherits 'DragAndDrop::DragAndDrop::Update' via dominance
+D:\Projects\BME\Prog 2\HF\Shape.h(169): message : see declaration of 'DragAndDrop::Update'
+D:\Projects\BME\Prog 2\HF\Shape.h(226,48): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\Projects\BME\Prog 2\HF\Shape.h(226,43): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\Projects\BME\Prog 2\HF\Shape.h(226,38): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\Projects\BME\Prog 2\HF\Shape.h(226,33): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\Projects\BME\Prog 2\HF\Shape.h(227,48): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\Projects\BME\Prog 2\HF\Shape.h(227,43): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\Projects\BME\Prog 2\HF\Shape.h(227,38): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\Projects\BME\Prog 2\HF\Shape.h(227,33): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\Projects\BME\Prog 2\HF\Shape.h(228,48): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\Projects\BME\Prog 2\HF\Shape.h(228,43): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\Projects\BME\Prog 2\HF\Shape.h(228,38): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\Projects\BME\Prog 2\HF\Shape.h(228,33): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\Projects\BME\Prog 2\HF\Shape.h(229,48): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\Projects\BME\Prog 2\HF\Shape.h(229,43): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\Projects\BME\Prog 2\HF\Shape.h(229,38): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\Projects\BME\Prog 2\HF\Shape.h(229,33): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\Projects\BME\Prog 2\HF\Shape.h(300,1): warning C4250: 'Triangle': inherits 'DragAndDrop::DragAndDrop::Update' via dominance
+D:\Projects\BME\Prog 2\HF\Shape.h(169): message : see declaration of 'DragAndDrop::Update'
+D:\Projects\BME\Prog 2\HF\Shape.h(286,48): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\Projects\BME\Prog 2\HF\Shape.h(286,43): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\Projects\BME\Prog 2\HF\Shape.h(286,38): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\Projects\BME\Prog 2\HF\Shape.h(286,33): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\Projects\BME\Prog 2\HF\Shape.h(287,48): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\Projects\BME\Prog 2\HF\Shape.h(287,43): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\Projects\BME\Prog 2\HF\Shape.h(287,38): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\Projects\BME\Prog 2\HF\Shape.h(287,33): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\Projects\BME\Prog 2\HF\Shape.h(288,48): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\Projects\BME\Prog 2\HF\Shape.h(288,43): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\Projects\BME\Prog 2\HF\Shape.h(288,38): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\Projects\BME\Prog 2\HF\Shape.h(288,33): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\Projects\BME\Prog 2\HF\Shape.h(341,1): warning C4250: 'Circle': inherits 'DragAndDrop::DragAndDrop::Update' via dominance
+D:\Projects\BME\Prog 2\HF\Shape.h(169): message : see declaration of 'DragAndDrop::Update'
+D:\Projects\BME\Prog 2\HF\Shape.h(329,56): warning C4244: 'argument': conversion from 'long double' to 'int', possible loss of data
+D:\Projects\BME\Prog 2\HF\Vector.h(74,43): warning C4244: 'argument': conversion from 'double' to 'size_t', possible loss of data
+D:\Projects\BME\Prog 2\HF\Vector.h(59): message : while compiling class template member function 'void Vector<Shape *>::splice(size_t,size_t)'
+D:\Projects\BME\Prog 2\HF\Scene.h(160): message : see reference to function template instantiation 'void Vector<Shape *>::splice(size_t,size_t)' being compiled
+D:\Projects\BME\Prog 2\HF\Scene.h(124): message : see reference to class template instantiation 'Vector<Shape *>' being compiled
+  HF.vcxproj -> D:\Projects\BME\Prog 2\HF\x64\Debug\HF.exe

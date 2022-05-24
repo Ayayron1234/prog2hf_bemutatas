@@ -5,13 +5,53 @@
 #include <fstream>
 #include "Vec2.h"
 #include "Input.h"
+#include "Vector.h"
 
 #ifndef JPORTA
 #include <SDL.h>
 #undef main
 #endif // !JPORTA
 
+#include "memtrace.h"
+
 enum ShapeType { SQUARE = 0, TRIANGLE = 1, CIRCLE = 2 };
+
+class Segment {
+	Vec2 A;
+	Vec2 B;
+public:
+	Segment(Vec2 a = Vec2(), Vec2 b = Vec2()) : A(a), B(b) {}
+
+	Vec2& GetA() {
+		return A;
+	}
+
+	Vec2& GetB() {
+		return B;
+	}
+
+	bool IsOverlappingWithCircle(const Vec2& P, double r) {
+		return (A - P).GetLength() < r || (B - P).GetLength() < r;
+	}
+
+	bool IsOverlappingWithSegment(const Segment& segment) {
+		Vec2 C, D;
+		C = segment.A;
+		D = segment.B;
+
+		double s1_x, s1_y, s2_x, s2_y;
+		s1_x = B.x() - A.x();     s1_y = B.y() - A.y();
+		s2_x = D.x() - C.x();     s2_y = D.y() - C.y();
+
+		float s, t;
+		s = (-s1_y * (A.x() - C.x()) + s1_x * (A.y() - C.y())) / (-s2_x * s1_y + s1_x * s2_y);
+		t = (s2_x * (A.y() - C.y()) - s2_y * (A.x() - C.x())) / (-s2_x * s1_y + s1_x * s2_y);
+
+		if (s >= 0 && s <= 1 && t >= 0 && t <= 1) return true;
+
+		return false;
+	}
+};
 
 class Shape {
 protected:
@@ -25,8 +65,8 @@ protected:
 		int x = r;
 		int y = 0;
 		int err = 0;
-		int x0 = origo.x;
-		int y0 = origo.y;
+		int x0 = origo.x();
+		int y0 = origo.y();
 
 		while (x >= y)
 		{
@@ -56,7 +96,7 @@ protected:
 	void DrawPoint(Vec2& P) {
 		SDL_SetRenderDrawColor(debugRenderer, 255, 0, 0, 255);
 
-		SDL_Rect rect = { P.x - 1, P.y - 1, 2, 2 };
+		SDL_Rect rect = { P.x() - 1, P.y() - 1, 2, 2};
 		SDL_RenderDrawRect(debugRenderer, &rect);
 	}
 #endif // !JPORTA
@@ -108,9 +148,10 @@ public:
 #endif // !JPORTA
 
 	virtual bool IsPointInside(const Vec2) = 0;
-	virtual bool IsInsideCircle(const double) = 0;
+	virtual bool IsOverlappingShape(Shape* shape) = 0;
+	virtual Vector<Segment> GetSegments() = 0;
 
-	virtual std::ofstream& Save(std::ofstream& file) = 0;
+	virtual std::ostream& Save(std::ostream& file) = 0;
 
 	virtual ~Shape() {
 	}
@@ -203,8 +244,60 @@ public:
 		if (APD + DPC + CPB + PBA > GetArea() + 0.001) return false;
 		return true;
 	}
-	bool IsInsideCircle(const double) {
-		return true;
+
+	Vector<Segment> GetSegments() {
+		Vector<Segment> res;
+		Vec2 A, B, C, D;
+		A = point;
+		B = (point - origo).Rotate(M_PI / 2.0) + origo;
+		C = (point - origo).Rotate(M_PI) + origo;
+		D = (point - origo).Rotate(3 * M_PI / 2.0) + origo;
+
+		res.push_back(Segment(A, B));
+		res.push_back(Segment(B, C));
+		res.push_back(Segment(C, D));
+		res.push_back(Segment(D, A));
+
+		return res;
+	}
+
+	bool IsOverlappingShape(Shape* shape) {
+		auto segments = shape->GetSegments();
+
+		switch (segments.size())
+		{
+		case 0: {
+			// overlapping with circle
+			if (IsPointInside(shape->GetOrigo()) || shape->IsPointInside(origo)) return true;
+			auto otherSegments = GetSegments();
+			for (size_t i = 0; i < otherSegments.size(); i++)
+				if (otherSegments.at(i).IsOverlappingWithCircle(shape->GetOrigo(), (shape->GetOrigo() - shape->GetPoint()).GetLength())) return true;
+			return false;
+		} break;
+		case 3: {
+			// overlapping with triangle
+			if (IsPointInside(shape->GetOrigo()) || shape->IsPointInside(origo)) return true;
+			auto otherSegments = GetSegments();
+			for (size_t i = 0; i < segments.size(); i++)
+				for (size_t j = 0; j < otherSegments.size(); j++) {
+					if (segments.at(i).IsOverlappingWithSegment(otherSegments.at(j))) return true;
+				}
+			return false;
+		} break;
+		case 4: {
+			// overlapping with square
+			if (IsPointInside(shape->GetOrigo()) || shape->IsPointInside(origo)) return true;
+			auto otherSegments = GetSegments();
+			for (size_t i = 0; i < segments.size(); i++)
+				for (size_t j = 0; j < otherSegments.size(); j++) {
+					if (segments.at(i).IsOverlappingWithSegment(otherSegments.at(j))) return true;
+				}
+			return false;
+		} break;
+		default:
+			break;
+		}
+		return false;
 	}
 
 	long double GetArea() {
@@ -223,15 +316,15 @@ public:
 		DrawCircle(renderer, point, 5);
 
 		SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
-		SDL_RenderDrawLine(renderer, a.x, a.y, b.x, b.y);
-		SDL_RenderDrawLine(renderer, b.x, b.y, c.x, c.y);
-		SDL_RenderDrawLine(renderer, c.x, c.y, d.x, d.y);
-		SDL_RenderDrawLine(renderer, d.x, d.y, a.x, a.y);
+		SDL_RenderDrawLine(renderer, a.x(), a.y(), b.x(), b.y());
+		SDL_RenderDrawLine(renderer, b.x(), b.y(), c.x(), c.y());
+		SDL_RenderDrawLine(renderer, c.x(), c.y(), d.x(), d.y());
+		SDL_RenderDrawLine(renderer, d.x(), d.y(), a.x(), a.y());
 	}
 #endif // !JPORTA
 
-	std::ofstream& Save(std::ofstream& file) {
-		file << "1 " << origo.x << " " << origo.y << " " << point.x << " " << point.y << std::endl;
+	std::ostream& Save(std::ostream& file) {
+		file << "1 " << origo.x() << " " << origo.y() << " " << point.x() << " " << point.y() << std::endl;
 		return file;
 	}
 };
@@ -259,8 +352,57 @@ public:
 		return true;
 	}
 	
-	bool IsInsideCircle(const double) {
-		return true;
+	Vector<Segment> GetSegments() {
+		Vector<Segment> res;
+		Vec2 A, B, C;
+		A = point;
+		B = (point - origo).Rotate(M_PI * 2.0 / 3.0) + origo;
+		C = (point - origo).Rotate(M_PI * 4.0 / 3.0) + origo;
+
+		res.push_back(Segment(A, B));
+		res.push_back(Segment(B, C));
+		res.push_back(Segment(C, A));
+
+		return res;
+	}
+
+	bool IsOverlappingShape(Shape* shape) {
+		auto segments = shape->GetSegments();
+
+		switch (segments.size())
+		{
+		case 0: {
+			// overlapping with circle
+			if (IsPointInside(shape->GetOrigo()) || shape->IsPointInside(origo)) return true;
+			auto otherSegments = GetSegments();
+			for (size_t i = 0; i < otherSegments.size(); i++)
+				if (otherSegments.at(i).IsOverlappingWithCircle(shape->GetOrigo(), (shape->GetOrigo() - shape->GetPoint()).GetLength())) return true;
+			return false;
+		} break;
+		case 3: {
+			// overlapping with triangle
+			if (IsPointInside(shape->GetOrigo()) || shape->IsPointInside(origo)) return true;
+			auto otherSegments = GetSegments();
+			for (size_t i = 0; i < segments.size(); i++)
+				for (size_t j = 0; j < otherSegments.size(); j++) {
+					if (segments.at(i).IsOverlappingWithSegment(otherSegments.at(j))) return true;
+				}
+			return false;
+		} break;
+		case 4: {
+			// overlapping with square
+			if (IsPointInside(shape->GetOrigo()) || shape->IsPointInside(origo)) return true;
+			auto otherSegments = GetSegments();
+			for (size_t i = 0; i < segments.size(); i++)
+				for (size_t j = 0; j < otherSegments.size(); j++) {
+					if (segments.at(i).IsOverlappingWithSegment(otherSegments.at(j))) return true;
+				}
+			return false;
+		} break;
+		default:
+			break;
+		}
+		return false;
 	}
 
 	long double GetArea() {
@@ -283,14 +425,14 @@ public:
 		DrawCircle(renderer, point, 5);
 
 		SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
-		SDL_RenderDrawLine(renderer, a.x, a.y, b.x, b.y);
-		SDL_RenderDrawLine(renderer, b.x, b.y, c.x, c.y);
-		SDL_RenderDrawLine(renderer, c.x, c.y, a.x, a.y);
+		SDL_RenderDrawLine(renderer, a.x(), a.y(), b.x(), b.y());
+		SDL_RenderDrawLine(renderer, b.x(), b.y(), c.x(), c.y());
+		SDL_RenderDrawLine(renderer, c.x(), c.y(), a.x(), a.y());
 	}
 #endif // !JPORTA
 
-	std::ofstream& Save(std::ofstream& file) {
-		file << "2 " << origo.x << " " << origo.y << " " << point.x << " " << point.y << std::endl;
+	std::ostream& Save(std::ostream& file) {
+		file << "2 " << origo.x() << " " << origo.y() << " " << point.x() << " " << point.y() << std::endl;
 		return file;
 	}
 
@@ -311,8 +453,40 @@ public:
 		return (P - origo).GetLength() <= (origo - point).GetLength();
 	}
 
-	bool IsInsideCircle(const double) {
-		return true;
+	Vector<Segment> GetSegments() {
+		Vector<Segment> res;
+		return res;
+	}
+
+	bool IsOverlappingShape(Shape* shape) {
+		auto segments = shape->GetSegments();
+
+		switch (segments.size())
+		{
+		case 0: {
+			// overlapping with circle
+			return (origo - shape->GetOrigo()).GetLength() < ((origo - point) + (shape->GetOrigo() - shape->GetPoint())).GetLength() 
+				|| IsPointInside(shape->GetOrigo()) 
+				|| shape->IsPointInside(origo);
+		} break;
+		case 3: {
+			// overlapping with triangle
+			if (IsPointInside(shape->GetOrigo()) || shape->IsPointInside(origo)) return true;
+			for (size_t i = 0; i < segments.size(); i++)
+				if (segments.at(i).IsOverlappingWithCircle(origo, (origo - point).GetLength())) return true;
+			return false;
+		} break;
+		case 4: {
+			// overlapping with square
+			if (IsPointInside(shape->GetOrigo()) || shape->IsPointInside(origo)) return true;
+			for (size_t i = 0; i < segments.size(); i++)
+				if (segments.at(i).IsOverlappingWithCircle(origo, (origo - point).GetLength())) return true;
+			return false;
+		} break;
+		default:
+			break;
+		}
+		return false;
 	}
 
 	long double GetArea() {
@@ -330,8 +504,8 @@ public:
 	}
 #endif // !JPORTA
 
-	std::ofstream& Save(std::ofstream& file) {
-		file << "3 " << origo.x << " " << origo.y << " " << point.x << " " << point.y << std::endl;
+	std::ostream& Save(std::ostream& file) {
+		file << "3 " << origo.x() << " " << origo.y() << " " << point.x() << " " << point.y() << std::endl;
 		return file;
 	}
 

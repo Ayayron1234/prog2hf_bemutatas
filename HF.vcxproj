@@ -151,8 +151,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="gtest_lite.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="JPorta.h" />
+    <ClInclude Include="memtrace.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Shape.h" />
     <ClInclude Include="Vec2.h" />
@@ -161,9 +163,8 @@
   <ItemGroup>
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="memtrace.cpp" />
     <ClCompile Include="Shape.cpp" />
-    <ClCompile Include="Vector.cpp" />
-    <ClCompile Include="Vec2.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

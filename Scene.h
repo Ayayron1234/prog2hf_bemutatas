@@ -9,6 +9,8 @@
 #include "Input.h"
 #endif // !JPORTA
 
+#include "memtrace.h"
+
 #ifndef JPORTA
 class Window {
 	bool* isRunning;
@@ -122,17 +124,29 @@ class Scene {
 	bool isRunning;
 
 	Vector<Shape*> shapes;
+	std::string saveFileName;
 
 public:
-	Scene() : isRunning(true)
+	Scene() : isRunning(true), saveFileName("save.txt")
 #ifndef JPORTA
 		, window(&isRunning, &newShapeType),
 		newShapeType(SQUARE)
 #endif // !JPORTA
 	{}
 
-	bool IsRunning() {
+	bool IsRunning() const {
 		return isRunning;
+	}
+
+	const std::string& GetSaveFileName() const {
+		return saveFileName;
+	}
+	void SetSaveFileName(const std::string& fileName) {
+		saveFileName = fileName;
+	}
+
+	size_t GetNumberOfShapes() const {
+		return shapes.size();
 	}
 
 #ifndef JPORTA
@@ -149,7 +163,9 @@ public:
 	}
 #endif // !JPORTA
 
-	void AddShape(Shape* shape) {
+	void AddShape(Shape* shape) throw(const char*) {
+		for (unsigned i = 0; i < shapes.size(); i++)
+			if (shapes.at(i) == shape) throw "Shape has allready been added!";
 		shapes.push_back(shape);
 	}
 
@@ -179,7 +195,7 @@ public:
 #endif // !JPORTA
 
 	void Save() {
-		std::ofstream file("save.txt");
+		std::ofstream file(saveFileName);
 		
 		for (size_t i = 0; i < shapes.size(); i++)
 			shapes.at(i)->Save(file);
@@ -187,30 +203,32 @@ public:
 		file.close();
 	}
 
-	void Load() {
-		std::ifstream file("save.txt");
+	void Load(std::ostream& debugOutput = std::cout) {
+		std::ifstream file(saveFileName);
 
 		size_t type;
 		Vec2 origo, point;
-		while (file >> type >> origo.x >> origo.y >> point.x >> point.y) {
+		while (file >> type >> origo.x() >> origo.y() >> point.x() >> point.y()) {
 			switch (type)
 			{
 			case 1: { 
-				std::cout << "Square(";
+				debugOutput << "Square(";
 				AddShape(new Square(origo, point)); 
 			} break;
 			case 2: {
-				std::cout << "Triangle(";
+				debugOutput << "Triangle(";
 				AddShape(new Triangle(origo, point));
 			} break;
 			case 3: {
-				std::cout << "Circle(";
+				debugOutput << "Circle(";
 				AddShape(new Circle(origo, point));
-			}
+			} break;
 			default:
+				debugOutput << "Shape with serialisation id:" << type << " does not exists." << std::endl;
+				continue;
 				break;
 			}
-			std::cout << "origo(" << origo.x << ", " << origo.y << "), point(" << point.x << ", " << point.y << "));" << std::endl;
+			debugOutput << "origo(" << origo.x() << ", " << origo.y() << "), point(" << point.x() << ", " << point.y() << "));" << std::endl;
 		}
 
 		file.close();
@@ -221,7 +239,15 @@ public:
 		ForEachShape([&](Shape* shape) {
 			shape->Update();
 			shape->draw(GetRenderer());
+
+			SDL_Renderer* renderer = GetRenderer();
+			SDL_SetRenderDrawColor(renderer, 255, 255, 255, 30);
+			ForEachShape([shape, renderer](Shape* shape2) {
+				if (shape != shape2 && shape->IsOverlappingShape(shape2)) {
+					SDL_RenderDrawLine(renderer, shape->GetOrigo().x(), shape->GetOrigo().y(), shape2->GetOrigo().x(), shape2->GetOrigo().y());
+				}
 			});
+		});
 
 		window.Update();
 #endif // !JPORTA

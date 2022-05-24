@@ -1,13 +1,15 @@
 #pragma once
 #include "JPorta.h"
 
-#ifndef JPORTA
+#ifndef CPORTA
 #include <functional>
 #include <SDL.h>
 #undef main
 
 #include "Vec2.h"
 #include "Vector.h"
+
+#include "memtrace.h"
 
 enum class MouseButton
 {
@@ -130,4 +132,4 @@ public:
 
 	friend class Window;
 };
-#endif // !JPORTA
+#endif // !CPORTA

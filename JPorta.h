@@ -1,2 +1,3 @@
 #pragma once
-// #define JPORTA
+#define MEMTRACE
+//#define JPORTA

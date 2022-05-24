@@ -29,6 +29,8 @@
       <Filter>Vector</Filter>
     </ClInclude>
     <ClInclude Include="JPorta.h" />
+    <ClInclude Include="memtrace.h" />
+    <ClInclude Include="gtest_lite.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -38,9 +40,6 @@
     <ClCompile Include="Input.cpp">
       <Filter>Input</Filter>
     </ClCompile>
-    <ClCompile Include="Vec2.cpp" />
-    <ClCompile Include="Vector.cpp">
-      <Filter>Vector</Filter>
-    </ClCompile>
+    <ClCompile Include="memtrace.cpp" />
   </ItemGroup>
 </Project>

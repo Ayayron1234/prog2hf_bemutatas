@@ -4,6 +4,8 @@
 #include <string.h>
 #include <iostream>
 
+#include "memtrace.h"
+
 template <typename T>
 class Vector {
 	size_t _capacity;
@@ -11,7 +13,7 @@ class Vector {
 	T* items;
 
 	void resize(size_t newCapacity) {
-		if (newCapacity < _size) return;
+		if (newCapacity < _size || newCapacity < 2) return;
 
 		T* newItems = new T[newCapacity];
 		for (size_t i = 0; i < _size; i++) newItems[i] = items[i];
@@ -23,12 +25,19 @@ class Vector {
 	}
 public:
 	Vector() : _capacity(2), _size(0), items(new T[2]) {}
+	Vector(const Vector& vector) {
+		_capacity = vector._capacity;
+		_size = vector._size;
+		items = new T[_capacity];
+		for (size_t i = 0; i < capacity(); i++)
+			items[i] = vector.items[i];
+	}
 
-	size_t size() {
+	size_t size() const {
 		return _size;
 	}
 
-	size_t capacity() {
+	size_t capacity() const {
 		return _capacity;
 	}
 
@@ -38,22 +47,9 @@ public:
 
 		items[_size - 1] = item;
 	}
-	void push_front(T item) {
-		if (_size + 1 >= _capacity / 2) resize(_capacity * 2);
-		_size++;
-
-		T* temp = new T[_size];
-		for (size_t i = 0; i < (_size - 1); i++) items[1 + i] = temp[i];
-		delete[] temp;
-
-		items[0] = item;
-	}
 
 	void pop_back() {
-		if (_size - 1 < _capacity / 2) resize(_capacity / 2);
-		_size--;
-
-		memset(&items[_size - 1], 0, sizeof(T));
+		splice(size() - 1, 1);
 	}
 
 	void splice(size_t start, size_t amount = 1) {
